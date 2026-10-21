@@ -79,7 +79,7 @@ service aera-audioadsprpcd /vendor/bin/aera-audioadsprpcd audiopd adsp
 
 # Keep AGM in its own init process group. A child forked by the one-shot
 # bootstrap would be killed automatically as soon as that bootstrap exits.
-service aera-agm-service /system/bin/aera-audio-service --dodge-stock-agm
+service aera-agm-service /system/bin/aera-audio-service --ktm-stock-agm
     class main
     disabled
     seclabel u:r:recovery:s0

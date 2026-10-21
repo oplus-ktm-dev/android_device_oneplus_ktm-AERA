@@ -8,7 +8,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
 
-LOCAL_PATH := device/oneplus/dodge
+LOCAL_PATH := device/oneplus/ktm
 
 # Shipping API level
 BOARD_SHIPPING_API_LEVEL := 34
@@ -30,7 +30,7 @@ PRODUCT_PACKAGES += \
     lpmake \
     lpunpack
 
-# Dodge/OnePlus 13 Adreno 830 backend. The ABI-matched KGSL module, Gen8
+# KTM/OnePlus Ace 6 Adreno 830 backend. The ABI-matched KGSL module, Gen8
 # firmware, EGL/GLES userspace, and minimal mapper closure stay device-local;
 # generic AERA remains portable and retains its software fallback.
 PRODUCT_VENDOR_PROPERTIES += \
@@ -45,5 +45,5 @@ PRODUCT_EXTRA_RECOVERY_KEYS += \
 PRODUCT_SOONG_NAMESPACES += $(LOCAL_PATH)
 
 # AERA-specific settings
-$(call inherit-product, $(LOCAL_PATH)/aera_dodge.mk)
+$(call inherit-product, $(LOCAL_PATH)/aera_ktm.mk)
 #

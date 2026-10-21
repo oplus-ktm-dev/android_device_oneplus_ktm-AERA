@@ -17,7 +17,7 @@
 #
 # 	Please maintain this if you use this script or any part of it
 #
-FDEVICE="dodge"
+FDEVICE="ktm"
 
 aera_get_target_device() {
 local chkdev=$(echo "$BASH_SOURCE" | grep -w $FDEVICE)
@@ -54,7 +54,7 @@ if [ "$1" = "$FDEVICE" -o "$AERA_BUILD_DEVICE" = "$FDEVICE" ]; then
 	export AERA_ALLOW_EARLY_SETTINGS_LOAD=1
 	export AERA_USE_UPDATED_MAGISKBOOT=1
 	# Keep magiskboot/repacking support, but omit the bundled installer ZIP.
-	# AERA's WPE runtime shares dodge's strict 100 MiB recovery partition.
+	# AERA's WPE runtime shares ktm's strict 100 MiB recovery partition.
 	export AERA_DELETE_MAGISK_ADDON=1
 	export AERA_USE_FSCK_EROFS_BINARY=1
 	export AERA_USE_PATCHELF_BINARY=1
@@ -62,8 +62,8 @@ if [ "$1" = "$FDEVICE" -o "$AERA_BUILD_DEVICE" = "$FDEVICE" ]; then
         export AERA_MISCELLANEOUS_ROOT_DIRECTORY=/sdcard
         export AERA_ALLOW_EARLY_SETTINGS_LOAD=1
 
-	# For OnePlus 13
-	export TARGET_DEVICE_ALT="PJZ110,OP5D55L1,OP5D0DL1,CPH2649,CPH2653,CPH2655"
+	# For OnePlus Ace 6
+	export TARGET_DEVICE_ALT="ktm,PLQ110,OP6113L1"
 	export AERA_TARGET_DEVICES="$TARGET_DEVICE_ALT"
 	export AERA_USE_DMSETUP=1
 	export AERA_ENABLE_ROOT_MANAGER=1

@@ -1,4 +1,4 @@
-# OnePlus 13 dodge Android device tree
+# OnePlus Ace 6 ktm Android device tree
 
 ## Working
 
@@ -31,12 +31,12 @@ cd sync
 cd ~/android/fox_14.1/device
 mkdir -p oneplus
 cd oneplus
-git clone https://github.com/koaaN/android_device_oneplus_dodge-orangefox.git dodge
+git clone https://github.com/koaaN/android_device_oneplus_dodge-orangefox.git ktm
 ```
 ### BUILD!
 ```
 cd ~/android/fox_14.1
 source build/envsetup.sh
-lunch twrp_dodge-ap2a-eng
+lunch twrp_ktm-eng
 mka adbd recoveryimage
 ```
