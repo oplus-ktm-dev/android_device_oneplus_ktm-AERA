@@ -5,10 +5,10 @@
 #include <cstdlib>
 
 namespace aera::mobile {
-// Dodge's stock rmt_storage serves a synthetic 512-byte sector at the end of
+// KTM's stock rmt_storage serves a synthetic 512-byte sector at the end of
 // the 20 MiB static OEM NV image. These packed fields match its miscinfo ABI;
 // they describe this device, not a replacement IMEI or generated identity.
-inline Bytes DodgeOemMiscInfo(const std::array<uint8_t,4> &serial,unsigned svn,
+inline Bytes KtmOemMiscInfo(const std::array<uint8_t,4> &serial,unsigned svn,
                              uint64_t project,unsigned rf,unsigned pcb) {
   if(svn>98||rf>255||pcb>255||!project)
     throw std::runtime_error("Invalid OEM modem hardware metadata");
@@ -21,7 +21,7 @@ inline Bytes DodgeOemMiscInfo(const std::array<uint8_t,4> &serial,unsigned svn,
   return page;
 }
 
-inline unsigned long DodgeHardwareNumber(const char *path) {
+inline unsigned long KtmHardwareNumber(const char *path) {
   Fd fd(open(path,O_RDONLY|O_CLOEXEC|O_NOFOLLOW));char text[128]{};
   if(fd.get()<0||read(fd.get(),text,sizeof(text)-1)<=0)
     throw std::runtime_error("OEM modem hardware metadata is unavailable");
@@ -33,7 +33,7 @@ inline unsigned long DodgeHardwareNumber(const char *path) {
   return n;
 }
 
-inline Bytes ReadDodgeOemMiscInfo() {
+inline Bytes ReadKtmOemMiscInfo() {
   const auto xml=ReadModemFeatures();tinyxml2::XMLDocument doc;
   if(doc.Parse(xml.c_str())!=tinyxml2::XML_SUCCESS)
     throw std::runtime_error("Invalid modem feature record");
@@ -43,9 +43,9 @@ inline Bytes ReadDodgeOemMiscInfo() {
   Fd fd(open("/sys/devices/soc0/serial_number",O_RDONLY|O_CLOEXEC));
   if(fd.get()<0||read(fd.get(),serial.data(),serial.size())!=ssize_t(serial.size()))
     throw std::runtime_error("OEM modem hardware serial is unavailable");
-  return DodgeOemMiscInfo(serial,strtoul(svn->GetText(),nullptr,10),
-      DodgeHardwareNumber("/proc/oplusVersion/prjName"),
-      DodgeHardwareNumber("/proc/oplusVersion/RFType"),
-      DodgeHardwareNumber("/proc/oplusVersion/pcbVersion"));
+  return KtmOemMiscInfo(serial,strtoul(svn->GetText(),nullptr,10),
+      KtmHardwareNumber("/proc/oplusVersion/prjName"),
+      KtmHardwareNumber("/proc/oplusVersion/RFType"),
+      KtmHardwareNumber("/proc/oplusVersion/pcbVersion"));
 }
 }

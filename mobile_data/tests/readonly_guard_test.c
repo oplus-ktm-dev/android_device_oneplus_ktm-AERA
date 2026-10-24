@@ -46,9 +46,9 @@ int main(void)
     setenv("AERA_CELLULAR_PROJECT", "23821", 1);
     setenv("AERA_CELLULAR_SLOT", "_a", 1);
     __wrap_open(legacy, O_RDONLY);
-    assert(opens == 1 && !strcmp(opened, DODGE_CN_NV_PATH));
+    assert(opens == 1 && !strcmp(opened, KTM_CN_NV_PATH));
     __wrap___open_2(legacy, O_RDONLY);
-    assert(opens == 2 && !strcmp(opened, DODGE_CN_NV_PATH));
+    assert(opens == 2 && !strcmp(opened, KTM_CN_NV_PATH));
     unsigned before = opens;
     assert(__wrap_open(legacy, O_RDWR) == -1 && errno == EROFS && opens == before);
     assert(__wrap_open(legacy, O_RDONLY | O_TRUNC) == -1 && errno == EROFS);
@@ -74,5 +74,5 @@ int main(void)
     assert(reads == 1 && !strcmp(opened, "/tmp/aera-cellular/oem-miscinfo"));
     __wrap_storage_close(&client);
     assert(oem_static_client == NULL);
-    puts("Dodge NV mapping, blocked writes, RAM shadowing and fail-closed metadata passed");
+    puts("KTM NV mapping, blocked writes, RAM shadowing and fail-closed metadata passed");
 }

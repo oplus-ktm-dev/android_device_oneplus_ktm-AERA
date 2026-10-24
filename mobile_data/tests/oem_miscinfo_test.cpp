@@ -5,7 +5,7 @@
 using namespace aera::mobile;
 int main() {
   const std::array<uint8_t,4> serial{'1','2','3','4'};
-  const auto page=DodgeOemMiscInfo(serial,42,23821,7,40);
+  const auto page=KtmOemMiscInfo(serial,42,23821,7,40);
   assert(page.size()==512&&U32(page.data())==0x87654321);
   assert(std::equal(serial.begin(),serial.end(),page.begin()+0x1a7));
   assert(page[0x1ab]==1&&page[0x1ac]==42&&page[0x1ad]==0);
@@ -14,8 +14,8 @@ int main() {
   assert(std::all_of(page.begin()+441,page.end(),[](uint8_t b){return b==0;}));
   for(unsigned bad:{99u,256u}) {
     bool rejected=false;
-    try{DodgeOemMiscInfo(serial,bad,23821,7,40);}catch(const std::exception &){rejected=true;}
+    try{KtmOemMiscInfo(serial,bad,23821,7,40);}catch(const std::exception &){rejected=true;}
     assert(rejected);
   }
-  puts("Dodge OEM metadata ABI and bounds passed");
+  puts("KTM OEM metadata ABI and bounds passed");
 }

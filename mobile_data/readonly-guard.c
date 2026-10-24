@@ -38,7 +38,7 @@ int __wrap_open(const char *path, int flags, ...)
         return -1;
     }
     if (!strcmp(path, "/dev/block/bootdevice/by-name/oem_stanvbk")) {
-        const char *backing = dodge_static_nv_backing(getenv("AERA_CELLULAR_PROJECT"),
+        const char *backing = ktm_static_nv_backing(getenv("AERA_CELLULAR_PROJECT"),
                                                     getenv("AERA_CELLULAR_SLOT"));
         if (!backing) {
             errno = EINVAL;
@@ -101,7 +101,7 @@ void __wrap_storage_close(struct rmtfd *client)
 ssize_t __real_storage_pread(struct rmtfd *, void *, size_t, off_t);
 ssize_t __wrap_storage_pread(struct rmtfd *client, void *buf, size_t count, off_t offset)
 {
-    // Stock Dodge exposes OEM miscinfo at virtual sector 40960. Keep that
+    // Stock KTM exposes OEM miscinfo at virtual sector 40960. Keep that
     // extension entirely in RAM; never read beyond or extend the block device.
     if (client == oem_static_client && client && offset == 20 * 1024 * 1024 && count == 512) {
         struct stat info;

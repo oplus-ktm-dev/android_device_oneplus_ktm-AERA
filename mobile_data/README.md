@@ -1,4 +1,4 @@
-# Dodge mobile data
+# KTM mobile data
 
 The provider and guarded modem helpers are opt-in through
 `AERA_ENABLE_MOBILE_DATA=1`. The implementation is adapted from Infiniti and
@@ -14,7 +14,7 @@ Checked against OnePlus 13 stock OTA `CPH2653_16.0.2.402(EX01)`:
 - Its `read_reserve1_mdmfeature` routine at `0x4b80` reads `0x3000` bytes
   from `oplusreserve1`, using offset `0x493000` for UFS (`/dev/block/sda`)
   or `0x46a000` otherwise. These match the Infiniti/Lighthouse layout.
-- Read-only inspection on the connected Dodge running that build confirmed
+- Read-only inspection on the connected device running that build confirmed
   a valid 241-byte original XML record at `0x493000`, the `/dev/mdmfeature`
   character device, UIO `rmtfs`, and a valid 15-digit DMS IMEI. Identity values
   were not logged. The installed stock executable matches the hash above.
@@ -41,7 +41,7 @@ NV writes, root-module scripts, or files under `/data` are needed. The helper
 opens its backing read-only and shadows modem writes in RAM. The original
 phone's feature record and hardware metadata are still used unchanged.
 
-Dodge also needs its stock-compatible virtual OEM metadata sector at offset
+KTM also needs its stock-compatible virtual OEM metadata sector at offset
 20 MiB. The helper supplies that sector from a private RAM file rather than
 appending anything to either backing image or physical partition.
 
