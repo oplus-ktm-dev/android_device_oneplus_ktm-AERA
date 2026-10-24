@@ -35,8 +35,9 @@ KTM (PLQ110, project `24851`) uses the device's own active-slot
 `oplusstanvbk_<slot>` partition (20 MiB `OEMNVBK` image; both slots confirmed
 in sync on hardware). The provider reads the project ID from
 `/proc/oplusVersion/prjName` and the slot from `ro.boot.slot_suffix`, then maps
-the stock `oem_stanvbk`/`oem_dycnvbk` aliases to the matching read-only
-`oplusstanvbk*` partitions. No NV image is bundled: an earlier OnePlus 13
+the stock `oem_stanvbk` alias to the read-only `oplusstanvbk_<slot>` partition.
+The `oem_dycnvbk` alias maps to the read-only, unslotted `oplusdycnvbk`
+partition. No NV image is bundled: an earlier OnePlus 13
 (project `23821`) workaround shipped a proprietary CN static-NV image, retired
 in this tree.
 
