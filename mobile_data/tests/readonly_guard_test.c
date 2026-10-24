@@ -43,12 +43,11 @@ ssize_t __real_storage_pread(struct rmtfd *fd, void *buf, size_t size, off_t off
 int main(void)
 {
     const char *legacy = "/dev/block/bootdevice/by-name/oem_stanvbk";
-    setenv("AERA_CELLULAR_PROJECT", "23821", 1);
     setenv("AERA_CELLULAR_SLOT", "_a", 1);
     __wrap_open(legacy, O_RDONLY);
-    assert(opens == 1 && !strcmp(opened, KTM_CN_NV_PATH));
+    assert(opens == 1 && !strcmp(opened, "/dev/block/bootdevice/by-name/oplusstanvbk_a"));
     __wrap___open_2(legacy, O_RDONLY);
-    assert(opens == 2 && !strcmp(opened, KTM_CN_NV_PATH));
+    assert(opens == 2 && !strcmp(opened, "/dev/block/bootdevice/by-name/oplusstanvbk_a"));
     unsigned before = opens;
     assert(__wrap_open(legacy, O_RDWR) == -1 && errno == EROFS && opens == before);
     assert(__wrap_open(legacy, O_RDONLY | O_TRUNC) == -1 && errno == EROFS);
@@ -58,7 +57,6 @@ int main(void)
     assert(__wrap_pwrite(-1, "x", 1, 0) == -1 && errno == EROFS);
     __wrap_storage_init("unused", false, true);
     assert(forced_read_only);
-    setenv("AERA_CELLULAR_PROJECT", "23822", 1);
     setenv("AERA_CELLULAR_SLOT", "_b", 1);
     __wrap_open(legacy, O_RDONLY);
     assert(!strcmp(opened, "/dev/block/bootdevice/by-name/oplusstanvbk_b"));

@@ -7,10 +7,12 @@ runtime instead of depending on their device-specific numbering.
 
 ## OEM modem feature map
 
-Checked against OnePlus 13 stock OTA `CPH2653_16.0.2.402(EX01)`:
+Checked against OnePlus 13 stock OTA `CPH2653_16.0.2.402(EX01)`. The current
+`16.0.10.x` builds of CPH2653 and PLQ110 ship the same `mdm_feature` binary
+(SHA-256 `5e95d0856243c8915200bf0c88db3ec5a9ab5752b4f716226d380b3cac8650bf`),
+and the UFS record was confirmed at `0x493000` on PLQ110 hardware:
 
 - Stock executable: `/odm/bin/hw/mdm_feature`
-- SHA-256: `5d80ade63f3c38c825d8f27968e9edb8e8c60e642f8a6b8208983c09e9eaf0b1`
 - Its `read_reserve1_mdmfeature` routine at `0x4b80` reads `0x3000` bytes
   from `oplusreserve1`, using offset `0x493000` for UFS (`/dev/block/sda`)
   or `0x46a000` otherwise. These match the Infiniti/Lighthouse layout.
@@ -27,14 +29,16 @@ RMTFS backing partitions remain read-only and writable TFTP/RFS paths are
 RAM-only. Kernel data modules are loaded from the installed ROM, not bundled
 into the recovery ramdisk. Do not stop the helpers before stopping MSS.
 
-## Project-specific static NV
+## Static NV partition
 
-Project `23821` uses the CN static-NV image bundled at
-`/system/etc/aera/mobile/23821/oplusstanvbk.img`. The provider reads the project
-ID from `/proc/oplusVersion/prjName` and checks the image's exact size and
-SHA-256 before starting MSS. A missing or modified image fails the connection
-instead of silently selecting an incompatible image. All other project IDs
-use their original active-slot `oplusstanvbk_a/b` partition.
+KTM (PLQ110, project `24851`) uses the device's own active-slot
+`oplusstanvbk_<slot>` partition (20 MiB `OEMNVBK` image; both slots confirmed
+in sync on hardware). The provider reads the project ID from
+`/proc/oplusVersion/prjName` and the slot from `ro.boot.slot_suffix`, then maps
+the stock `oem_stanvbk`/`oem_dycnvbk` aliases to the matching read-only
+`oplusstanvbk*` partitions. No NV image is bundled: an earlier OnePlus 13
+(project `23821`) workaround shipped a proprietary CN static-NV image, retired
+in this tree.
 
 The selection is private to RMTFS: no global partition symlinks, loop devices,
 NV writes, root-module scripts, or files under `/data` are needed. The helper
@@ -45,23 +49,17 @@ KTM also needs its stock-compatible virtual OEM metadata sector at offset
 20 MiB. The helper supplies that sector from a private RAM file rather than
 appending anything to either backing image or physical partition.
 
-The bundled blob is proprietary and was supplied by the user's installed
-`fix-signal-oneplus13` v4.1 module (author Fly). See `firmware/23821/NOTICE`.
-The image remains proprietary; the license of the surrounding provider source
-does not apply to it. Its provenance and original notice are retained separately.
-
 ## Verification
 
 Host tests: `tests/sim_test.cpp`, `tests/modem_features_test.cpp`,
-`tests/oem_miscinfo_test.cpp`, `tests/nv_override_test.cpp`, and
-`tests/readonly_guard_test.c`. The file-open guard covers both normal libc
+`tests/oem_miscinfo_test.cpp`, and `tests/readonly_guard_test.c`. The file-open guard covers both normal libc
 calls and Bionic's fortified `__open_2` / `__openat_2` entry points; the latter
 must not bypass read-only enforcement or the private NV-path selection.
-Live testing of the RAM-only CN overlay restored a valid DMS IMEI, SIM-ready
-state, automatic selection of SIM 1, and Telia 4G data. The user confirmed it
-worked. The integrated selector also connected successfully using the bundled
-image, with valid original identity and two successful cellular-interface
-ping replies. A newly built and flashed recovery then reconnected to Telia 4G
+On the original OnePlus 13 target, live testing of the RAM-only CN overlay
+restored a valid DMS IMEI, SIM-ready state, automatic selection of SIM 1, and
+Telia 4G data. A newly built and flashed recovery reconnected to Telia 4G
 after a fresh boot using the packaged helper, without temporary NV aliases or
-helper bind mounts.
+helper bind mounts. On KTM hardware the active-slot `oplusstanvbk` partitions
+and the UFS modem-feature record were verified read-only; no NV writes were
+performed.
 Use the init-managed `aera-cellular` service, not an ADB-background daemon.

@@ -38,8 +38,7 @@ int __wrap_open(const char *path, int flags, ...)
         return -1;
     }
     if (!strcmp(path, "/dev/block/bootdevice/by-name/oem_stanvbk")) {
-        const char *backing = ktm_static_nv_backing(getenv("AERA_CELLULAR_PROJECT"),
-                                                    getenv("AERA_CELLULAR_SLOT"));
+        const char *backing = ktm_static_nv_backing(getenv("AERA_CELLULAR_SLOT"));
         if (!backing) {
             errno = EINVAL;
             return -1;

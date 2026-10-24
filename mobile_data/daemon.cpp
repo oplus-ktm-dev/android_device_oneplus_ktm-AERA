@@ -4,7 +4,6 @@
 #include "sim.hpp"
 #include "modem_features.hpp"
 #include "oem_miscinfo.hpp"
-#include "nv_override.hpp"
 #include <openssl/sha.h>
 #include <arpa/inet.h>
 #include <dirent.h>
@@ -358,7 +357,6 @@ struct Session {
       char slot[PROPERTY_VALUE_MAX]{};property_get("ro.boot.slot_suffix",slot,"");
       if(strcmp(slot,"_a")&&strcmp(slot,"_b"))_exit(126);
       setenv("AERA_CELLULAR_SLOT",slot,1);
-      setenv("AERA_CELLULAR_PROJECT",std::to_string(project).c_str(),1);
       std::string executable=helper_directory+"/"+name;
       std::vector<char *> argv{const_cast<char *>(executable.c_str())};
       for(const auto &arg:arguments)argv.push_back(const_cast<char *>(arg.c_str()));
@@ -520,9 +518,7 @@ struct Session {
     if(Read(modem+"/state")!="offline")throw std::runtime_error("The modem is already running outside AERA mobile data; reboot recovery first");
     Phase("starting","Preparing the modem");
     project=KtmHardwareNumber("/proc/oplusVersion/prjName");
-    ValidateKtmNvOverride(project);
-    fprintf(stderr,"mobile: project %lu static NV source: %s\n",project,
-        project==23821?"verified ramdisk CN image":"active-slot partition");
+    fprintf(stderr,"mobile: project %lu static NV source: active-slot partition\n",project);
     Module("rmnet_ctl");Module("ipanetm");Module("rmnet_core");
     LoadModemFeatures();
     // Extend only the RMTFS RAM view, never the actual OEM NV partition.
