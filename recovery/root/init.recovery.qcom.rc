@@ -151,4 +151,10 @@ on property:ro.crypto.state=encrypted && property:ro.boot.dynamic_partitions=tru
 
 on property:vendor.sys.listeners.registered=true
     start vendor.ssgtzd
-    start vendor.keymint-strongbox
+    # Ace 6 keymint/gatekeeper are QTI/QSEE-backed (IKeyMintDevice/default =
+    # android.hardware.security.keymint-service-qti). The ODM NXP strongbox is
+    # an OP13 leftover with no matching service/binary in the Ace 6 ROM and
+    # cannot provide a RoT challenge in recovery, so keystore2 cannot use it.
+    # Start the QTI keymint so the recovery keystore2 shares the same Root of
+    # Trust as the system side, which is required to unwrap the fscrypt key.
+    start vendor.keymint-qti
