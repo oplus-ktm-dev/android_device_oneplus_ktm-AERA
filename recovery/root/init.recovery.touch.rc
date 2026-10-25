@@ -25,6 +25,9 @@ on early-init
 on property:post.decrypt.modules=true
     write /sys/devices/platform/soc/soc:hbp@0/irq_enable 0,1
 
+on property:twrp.modules.loaded=true
+    write /sys/devices/platform/soc/soc:hbp@0/irq_enable 0,1
+
 # Tighten the ODM rc's 0777 touch configuration after the daemon is up.
 service aera-touchcfg-lock /system/bin/sh -c "chmod 0770 /data/vendor/touchconfig; chown system:system /data/vendor/touchconfig; find /data/vendor/touchconfig -maxdepth 1 -name '*.xml' -exec chmod 0660 {} + 2>/dev/null; find /data/vendor/touchconfig -maxdepth 1 -name '*.xml' -exec chown system:system {} + 2>/dev/null"
     class main
