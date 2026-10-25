@@ -26,6 +26,7 @@
 #
 
 import /init.recovery.wifi.rc
+import /init.recovery.touch.rc
 
 on early-init
     # Enable Qualcomm's Mapper5/SnapAlloc path before the allocator starts.
