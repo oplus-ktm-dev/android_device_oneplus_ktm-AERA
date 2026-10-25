@@ -1,4 +1,0 @@
-# ktm (Ace 6): label the ODM hbp5 touch HAL executable so init's seclabel
-# audit finds the oplus_touch_hal domain transition when starting the
-# service from the ODM-partition rc under the recovery policy.
-/odm/bin/hw/vendor-oplus-hardware-touch-V2-hbp5-service	u:object_r:oplus_touch_hal_exec:s0

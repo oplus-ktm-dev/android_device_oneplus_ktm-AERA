@@ -1,21 +1,21 @@
-# ktm (Ace 6): confined SELinux domain for the ODM hbp5 touch HAL daemon.
+# ktm (Ace 6): complete the ROM oplus touch HAL types in the recovery policy.
 #
-# The ODM-partition rc starts /odm/bin/hw/vendor-oplus-hardware-touch-V2-hbp5-service
-# from init. Under the recovery policy that binary has no executable-domain
-# transition (its files fall back to rootfs:s0), so init's seclabel audit
-# refuses to start it while the system is enforcing.
+# When recovery mounts the device ODM partition, init loads its own
+# precompiled_file_contexts; the hbp5 service binary matches the ROM rule
 #
-# Instead of dropping the whole system to permissive, give the service a
-# dedicated exec label + domain transition (satisfies the init audit) and
-# mark the domain permissive so its accesses are logged but not blocked;
-# every other domain keeps full enforcing MAC. No per-domain allow grants
-# are listed: the permissive attribute is the authorization.
-type oplus_touch_hal_exec, exec_type, file_type, vendor_file_type;
-type oplus_touch_hal, domain;
-permissive oplus_touch_hal;
+#   /(vendor|odm)/bin/hw/vendor-oplus-hardware-touch-V2-hbp5-service
+#       u:object_r:hal_oplus_touch_aidl_default_exec:s0
+#
+# whose type is absent from the recovery policy, so the label resolves to
+# nothing and init's seclabel audit refuses to start the service. Define
+# the ROM type names here, add the transition from the init-family
+# domains, and mark the domain permissive so the daemon's accesses are
+# logged rather than blocked while every other domain stays enforcing.
 
-# The service runs from the init/recovery domains depending on which rc
-# launches it; cover both entry points.
-type_transition init oplus_touch_hal_exec : process oplus_touch_hal;
-type_transition recovery oplus_touch_hal_exec : process oplus_touch_hal;
-type_transition vendor_init oplus_touch_hal_exec : process oplus_touch_hal;
+type hal_oplus_touch_aidl_default_exec, exec_type, file_type, vendor_file_type;
+type hal_oplus_touch_aidl_default, domain;
+permissive hal_oplus_touch_aidl_default;
+
+type_transition init hal_oplus_touch_aidl_default_exec : process hal_oplus_touch_aidl_default;
+type_transition recovery hal_oplus_touch_aidl_default_exec : process hal_oplus_touch_aidl_default;
+type_transition vendor_init hal_oplus_touch_aidl_default_exec : process hal_oplus_touch_aidl_default;
