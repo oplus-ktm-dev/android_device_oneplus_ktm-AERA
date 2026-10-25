@@ -28,5 +28,5 @@ service aera-touchcfg-lock /system/bin/sh -c "chmod 0770 /data/vendor/touchconfi
     group root system
     seclabel u:r:recovery:s0
 
-on property:init.svc.vendor.touch-aidl-2=1
+on property:init.svc.vendor.touch-aidl-2=running
     start aera-touchcfg-lock
