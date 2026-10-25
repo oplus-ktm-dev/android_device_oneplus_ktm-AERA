@@ -7,8 +7,9 @@
 #
 # Instead of dropping the whole system to permissive, give the service a
 # dedicated exec label + domain transition (satisfies the init audit) and
-# mark the domain permissive so its accesses are logged but not blocked.
-# Every other domain keeps full enforcing MAC.
+# mark the domain permissive so its accesses are logged but not blocked;
+# every other domain keeps full enforcing MAC. No per-domain allow grants
+# are listed: the permissive attribute is the authorization.
 type oplus_touch_hal_exec, exec_type, file_type, vendor_file_type;
 type oplus_touch_hal, domain;
 permissive oplus_touch_hal;
@@ -18,8 +19,3 @@ permissive oplus_touch_hal;
 type_transition init oplus_touch_hal_exec : process oplus_touch_hal;
 type_transition recovery oplus_touch_hal_exec : process oplus_touch_hal;
 type_transition vendor_init oplus_touch_hal_exec : process oplus_touch_hal;
-
-# Narrow base grants (the permissive attribute logs the rest without
-# blocking, so this stays deliberately small).
-allow oplus_touch_hal oplus_touch_hal:process { siginh rlimit };
-allow oplus_touch_hal devpts:chr_file { read write open };
