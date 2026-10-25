@@ -1,34 +1,18 @@
 # ktm (Ace 6) recovery-side touch enablement.
 #
-# 1) The HBP framework (oplus_hbp_core) registers the touch-00 IRQ at probe
-#    time and then disables it; the panel-resume / hbp5-daemon handshake that
-#    normally re-enables it never runs in recovery. Force-enable the kernel
-#    IRQ gate once AERA module loading is complete.
-# 2) The ODM hbp5 HAL daemon is refused by init in enforcing mode (the ODM
-#    binary falls back to rootfs:s0, no domain transition; the seclabel
-#    audit is fatal while the system is enforcing). Drop the system to
-#    permissive so that audit is non-fatal and the ODM rc can start the
-#    daemon; the daemon then completes its driver handshake.
-#
-# The TWRP recovery policy (system/sepolicy/private/twrp.te, compiled via
-# the recovery_only macro) declares init/recovery/adbd permissive domains,
-# so the /sys/fs/selinux/enforce write below succeeds under the TWRP tree.
-# The sh service is a belt-and-braces fallback in case that attribute is
-# missing from the live policy.
-#
-# A TWRP-style custom recovery running permissive is the community norm.
+# 1) ODM hbp5 HAL daemon: the ODM-partition binary is not covered by the
+#    recovery policy, so init's seclabel audit refuses to start it while
+#    the system is enforcing. Enable the generic permissive switch
+#    (init.recovery.aera-selinux.rc in bootable/recovery) so the audit
+#    becomes non-fatal and the ODM rc can start the daemon.
+# 2) HBP IRQ gate: the HBP framework (oplus_hbp_core) registers the
+#    touch-00 IRQ at probe time and then disables it; the panel-resume /
+#    daemon handshake that normally re-enables it never runs in recovery.
+#    Open the device's kernel IRQ gate once AERA module loading is
+#    complete so the kernel direct-report path works regardless.
 
 on early-init
-    # Non-fatal if denied by policy: services start later either way.
-    write /sys/fs/selinux/enforce 0
-    start aera-selinux-perm
-
-service aera-selinux-perm /system/bin/sh -c "echo 0 > /sys/fs/selinux/enforce"
-    class main
-    oneshot
-    user root
-    group root
-    seclabel u:r:recovery:s0
+    setprop sys.aera.selinux.permissive true
 
 on property:post.decrypt.modules=true
     write /sys/devices/platform/soc/soc:hbp@0/irq_enable 0,1
