@@ -1,12 +1,14 @@
 # ktm (Ace 6) recovery-side touch enablement.
 #
-# 1) ODM hbp5 HAL daemon: started by the ODM-partition rc. The recovery
-#    policy extension (sepolicy/ in this device tree, via
-#    BOARD_VENDOR_SEPOLICY_DIRS) labels the executable and provides the
-#    oplus_touch_hal domain transition, so init's seclabel audit passes
-#    while the system stays enforcing; the permissive-domain attribute
-#    lets the daemon run (denials logged, not blocked) without lowering
-#    system-wide enforcement.
+# 1) ODM hbp5 HAL daemon: the ODM-partition rc starts it, but under the
+#    recovery policy the binary has no executable-domain transition, so
+#    init's seclabel audit refuses it while the system is enforcing.
+#    Enable the generic permissive switch (bootable/recovery's
+#    init.recovery.aera-selinux.rc) so the audit becomes non-fatal and
+#    the daemon can run; the daemon then completes its driver handshake.
+#    (TWRP-style custom recoveries running permissive is the community
+#    norm; for a confined-domain alternative see the git history:
+#    a device sepolicy extension with a permissive HAL domain.)
 # 2) The ODM rc creates /data/vendor/touchconfig and its XML configs with
 #    mode 0777. Once the daemon is up and has loaded its configs, tighten
 #    ownership/permissions so unrelated local processes cannot modify the
@@ -16,6 +18,9 @@
 #    daemon handshake that normally re-enables it never runs in recovery.
 #    Open the device's kernel IRQ gate once AERA module loading is
 #    complete so the kernel direct-report path works regardless.
+
+on early-init
+    setprop sys.aera.selinux.permissive true
 
 on property:post.decrypt.modules=true
     write /sys/devices/platform/soc/soc:hbp@0/irq_enable 0,1
