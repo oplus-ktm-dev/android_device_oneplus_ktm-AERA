@@ -1,0 +1,25 @@
+# ktm (Ace 6): confined SELinux domain for the ODM hbp5 touch HAL daemon.
+#
+# The ODM-partition rc starts /odm/bin/hw/vendor-oplus-hardware-touch-V2-hbp5-service
+# from init. Under the recovery policy that binary has no executable-domain
+# transition (its files fall back to rootfs:s0), so init's seclabel audit
+# refuses to start it while the system is enforcing.
+#
+# Instead of dropping the whole system to permissive, give the service a
+# dedicated exec label + domain transition (satisfies the init audit) and
+# mark the domain permissive so its accesses are logged but not blocked.
+# Every other domain keeps full enforcing MAC.
+type oplus_touch_hal_exec, exec_type, file_type, vendor_file_type;
+type oplus_touch_hal, domain;
+permissive oplus_touch_hal;
+
+# The service runs from the init/recovery domains depending on which rc
+# launches it; cover both entry points.
+type_transition init oplus_touch_hal_exec : process oplus_touch_hal;
+type_transition recovery oplus_touch_hal_exec : process oplus_touch_hal;
+type_transition vendor_init oplus_touch_hal_exec : process oplus_touch_hal;
+
+# Narrow base grants (the permissive attribute logs the rest without
+# blocking, so this stays deliberately small).
+allow oplus_touch_hal oplus_touch_hal:process { siginh rlimit };
+allow oplus_touch_hal devpts:chr_file { read write open };

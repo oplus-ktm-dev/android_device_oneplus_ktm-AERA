@@ -1,18 +1,32 @@
 # ktm (Ace 6) recovery-side touch enablement.
 #
-# 1) ODM hbp5 HAL daemon: the ODM-partition binary is not covered by the
-#    recovery policy, so init's seclabel audit refuses to start it while
-#    the system is enforcing. Enable the generic permissive switch
-#    (init.recovery.aera-selinux.rc in bootable/recovery) so the audit
-#    becomes non-fatal and the ODM rc can start the daemon.
-# 2) HBP IRQ gate: the HBP framework (oplus_hbp_core) registers the
+# 1) ODM hbp5 HAL daemon: started by the ODM-partition rc. The recovery
+#    policy extension (sepolicy/ in this device tree, via
+#    BOARD_VENDOR_SEPOLICY_DIRS) labels the executable and provides the
+#    oplus_touch_hal domain transition, so init's seclabel audit passes
+#    while the system stays enforcing; the permissive-domain attribute
+#    lets the daemon run (denials logged, not blocked) without lowering
+#    system-wide enforcement.
+# 2) The ODM rc creates /data/vendor/touchconfig and its XML configs with
+#    mode 0777. Once the daemon is up and has loaded its configs, tighten
+#    ownership/permissions so unrelated local processes cannot modify the
+#    touch configuration.
+# 3) HBP IRQ gate: the HBP framework (oplus_hbp_core) registers the
 #    touch-00 IRQ at probe time and then disables it; the panel-resume /
 #    daemon handshake that normally re-enables it never runs in recovery.
 #    Open the device's kernel IRQ gate once AERA module loading is
 #    complete so the kernel direct-report path works regardless.
 
-on early-init
-    setprop sys.aera.selinux.permissive true
-
 on property:post.decrypt.modules=true
     write /sys/devices/platform/soc/soc:hbp@0/irq_enable 0,1
+
+# Tighten the ODM rc's 0777 touch configuration after the daemon is up.
+service aera-touchcfg-lock /system/bin/sh -c "chmod 0770 /data/vendor/touchconfig; chown system:system /data/vendor/touchconfig; find /data/vendor/touchconfig -maxdepth 1 -name '*.xml' -exec chmod 0660 {} + 2>/dev/null; find /data/vendor/touchconfig -maxdepth 1 -name '*.xml' -exec chown system:system {} + 2>/dev/null"
+    class main
+    oneshot
+    user root
+    group root system
+    seclabel u:r:recovery:s0
+
+on property:init.svc.vendor.touch-aidl-2=1
+    start aera-touchcfg-lock
