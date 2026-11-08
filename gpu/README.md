@@ -1,9 +1,10 @@
 # Ktm GPU recovery prebuilts
 
 These proprietary ARM64 Adreno userspace libraries, kernel module, and Gen8
-firmware are copied from the owner's extracted OnePlus Ace 6 OTA at
-`MIO-KITCHEN/OP13`. They stay in the Ktm device tree because they are specific
-to the SM8750/`sun` platform and its Adreno 830.
+firmware were extracted from a OnePlus 13 stock OTA by the owner
+(`MIO-KITCHEN/OP13`) and are reused on the Ace 6: both devices run the same
+SM8750/`sun` platform and Adreno 830 backend. They stay in the Ktm device tree
+and must be validated against the Ace 6 stock GPU image on first recovery boot.
 
 `msm_kgsl.ko` is ABI-matched to the recovery kernel: the OTA and recovery copies
 of `msm_drm.ko` have the same SHA-256. All KGSL hard and soft dependencies are

@@ -12,6 +12,10 @@ int main() {
   assert(U32(page.data()+0x1af)==23821&&U32(page.data()+0x1b3)==0);
   assert(page[0x1b7]==7&&page[0x1b8]==40);
   assert(std::all_of(page.begin()+441,page.end(),[](uint8_t b){return b==0;}));
+  const auto ace6=KtmOemMiscInfo(serial,25,24851,7,40);
+  assert(ace6.size()==512&&U32(ace6.data())==0x87654321);
+  assert(U32(ace6.data()+0x1af)==24851);          // Ace 6 project passes through
+  assert(ace6[0x1ac]==25);                        // imeiSv from the modem feature map
   for(unsigned bad:{99u,256u}) {
     bool rejected=false;
     try{KtmOemMiscInfo(serial,bad,23821,7,40);}catch(const std::exception &){rejected=true;}

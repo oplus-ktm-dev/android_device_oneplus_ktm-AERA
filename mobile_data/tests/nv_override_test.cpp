@@ -9,7 +9,7 @@ int main(int argc,char **argv) {
   assert(argc==2);
   for(const char *slot:{"_a","_b"}) {
     assert(!strcmp(ktm_static_nv_backing("23821",slot),KTM_CN_NV_PATH));
-    for(const char *project:{"23822","238210","023821","23821extra","","unknown"}) {
+    for(const char *project:{"24851","23822","238210","023821","23821extra","","unknown"}) {
       const std::string expected=std::string("/dev/block/bootdevice/by-name/oplusstanvbk")+slot;
       assert(expected==ktm_static_nv_backing(project,slot));
     }
