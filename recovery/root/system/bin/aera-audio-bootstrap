@@ -20,10 +20,10 @@ fail() {
 }
 
 case "$(getprop ro.product.device)" in
-    ktm|OP5D55L1|OP5D0DL1|PJZ110|CPH2649|CPH2653|CPH2655) ;;
+    ktm|PLQ110|OP6113L1|OP5D55L1|OP5D0DL1|PJZ110|CPH2649|CPH2653|CPH2655) ;;
     *)
         case "$(getprop ro.product.vendor.device)" in
-            ktm|OP5D55L1|OP5D0DL1|PJZ110|CPH2649|CPH2653|CPH2655) ;;
+            ktm|PLQ110|OP6113L1|OP5D55L1|OP5D0DL1|PJZ110|CPH2649|CPH2653|CPH2655) ;;
             *) fail "this backend is only valid on Ktm/OnePlus 13" ;;
         esac
         ;;
