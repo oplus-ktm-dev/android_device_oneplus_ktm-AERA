@@ -1,6 +1,6 @@
 #!/system/bin/sh
 # SPDX-License-Identifier: Apache-2.0
-# Dodge: expose installed, slot-matched firmware read-only. Never alter enrollment.
+# Ktm: expose installed, slot-matched firmware read-only. Never alter enrollment.
 PATH=/system/bin:/sbin
 export PATH
 requested() { [ "$(getprop vendor.aera.fingerprint.start)" = 1 ]; }
@@ -30,7 +30,7 @@ for source in "$stock"/firmware/uff_*; do
         mount -o private none "$target" || exit 1
     fi
 done
-# Dodge's ultrasonic routing is implemented by the stock HBP touch daemon.
+# Ktm's ultrasonic routing is implemented by the stock HBP touch daemon.
 # Keep its panel-specific firmware/configuration matched to installed ODM.
 [ -d "$stock/firmware/tp" ] || fail "installed touch firmware is missing"
 mkdir -p /odm/firmware/tp || exit 1

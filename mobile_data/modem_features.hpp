@@ -34,9 +34,14 @@ inline std::string ReadModemFeatures() {
   struct stat partition{};
   if(source.get()<0||fstat(source.get(),&partition)||!S_ISBLK(partition.st_mode))
     throw std::runtime_error("Cannot read the device modem feature record");
-  // Verified against Dodge CPH2653_16.0.2.402(EX01) odm/bin/hw/mdm_feature:
-  // read_reserve1_mdmfeature (0x4b80) reads 0x3000 bytes at 0x46a000,
-  // adding 0x29000 for UFS (/dev/block/sda). Never run the NV-writing tool.
+  // Offsets follow the CPH2653_16.0.2.402(EX01) stock odm/bin/hw/mdm_feature
+  // layout (project 23821): read_reserve1_mdmfeature reads 0x3000 bytes at
+  // 0x46a000, adding 0x29000 for UFS (/dev/block/sda). Never run the
+  // NV-writing tool.
+  // Verified on Ace 6 PLQ110 (project 24851, OnePlus/PLQ110/OP6113L1:16/
+  // BP2A.250605.015, ODM mdm_feature SHA-256 ee33e677..., 51944 bytes):
+  // oplusreserve1 holds the modem feature XML at 0x493000 with /dev/block/sda
+  // present, i.e. the UFS branch; 0x46a000 is all zeros on that device.
   Bytes record(12288);
   const off_t offset=access("/dev/block/sda",F_OK)==0?0x493000:0x46a000;
   if(pread(source.get(),record.data(),record.size(),offset)!=static_cast<ssize_t>(record.size()))

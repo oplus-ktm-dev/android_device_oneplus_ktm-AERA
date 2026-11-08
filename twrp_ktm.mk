@@ -27,13 +27,13 @@ $(call inherit-product, vendor/twrp/config/common.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 
 
-# Inherit from dodge device
-$(call inherit-product, device/oneplus/dodge/device.mk)
+# Inherit from ktm device
+$(call inherit-product, device/oneplus/ktm/device.mk)
 
-PRODUCT_DEVICE := dodge
-PRODUCT_NAME := twrp_dodge
+PRODUCT_DEVICE := ktm
+PRODUCT_NAME := twrp_ktm
 PRODUCT_BRAND := oneplus
-PRODUCT_MODEL := OnePlus 13
+PRODUCT_MODEL := OnePlus Ace 6
 PRODUCT_MANUFACTURER := oneplus
 
 PRODUCT_GMS_CLIENTID_BASE := android-oplus

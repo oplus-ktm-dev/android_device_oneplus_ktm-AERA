@@ -2,22 +2,6 @@ package {
     default_applicable_licenses: ["Android-Apache-2.0"],
 }
 
-license {
-    name: "aera_dodge_cn_nv_proprietary",
-    visibility: [":__subpackages__"],
-    license_kinds: ["legacy_proprietary"],
-    license_text: ["firmware/23821/NOTICE"],
-}
-
-prebuilt_etc {
-    name: "aera-dodge-cn-static-nv",
-    recovery: true,
-    src: "firmware/23821/oplusstanvbk.img",
-    filename: "oplusstanvbk.img",
-    sub_dir: "aera/mobile/23821",
-    licenses: ["aera_dodge_cn_nv_proprietary"],
-}
-
 cc_binary {
     name: "aera-cellular-provider",
     recovery: true,
@@ -29,7 +13,7 @@ cc_binary {
     cflags: ["-Wall", "-Wextra", "-Werror"],
     static_libs: ["libjsoncpp"],
     shared_libs: ["libcutils", "libcrypto", "libtinyxml2"],
-    required: ["aera-mobile-rmtfs", "aera-mobile-tftp", "aera-dodge-cn-static-nv"],
+    required: ["aera-mobile-rmtfs", "aera-mobile-tftp"],
 }
 
 cc_binary {

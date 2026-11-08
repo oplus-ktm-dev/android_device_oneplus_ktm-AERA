@@ -2,7 +2,7 @@
 # Copyright (C) 2026 AERA Recovery Project contributors
 # SPDX-License-Identifier: Apache-2.0
 #
-# Mount the installed Dodge stock audio stack read-only and start the narrow
+# Mount the installed Ktm stock audio stack read-only and start the narrow
 # AGM service used by AERA. This script is deliberately device-local.
 
 PATH=/system/bin:/sbin
@@ -20,11 +20,11 @@ fail() {
 }
 
 case "$(getprop ro.product.device)" in
-    dodge|OP5D55L1|OP5D0DL1|PJZ110|CPH2649|CPH2653|CPH2655) ;;
+    ktm|PLQ110|OP6113L1) ;;
     *)
         case "$(getprop ro.product.vendor.device)" in
-            dodge|OP5D55L1|OP5D0DL1|PJZ110|CPH2649|CPH2653|CPH2655) ;;
-            *) fail "this backend is only valid on Dodge/OnePlus 13" ;;
+            ktm|PLQ110|OP6113L1) ;;
+            *) fail "this backend is only valid on Ktm/OnePlus Ace 6" ;;
         esac
         ;;
 esac
@@ -87,7 +87,7 @@ fi
     fail "could not expose the stock /dsp path"
 
 # Qualcomm's audio processes are built against the framework Binder ABI from
-# the installed OP13 system. Recovery's Binder-NDK library is close enough to
+# the installed Ace 6 system. Recovery's Binder-NDK library is close enough to
 # load but is not compatible with the vendor-side Binder snapshot, causing
 # audioadsprpcd and dspservice to restart before AudioPD comes up. Expose only
 # the two ABI-matched Binder libraries rather than overlaying /system.
@@ -196,4 +196,4 @@ done
 # recovery's toolbox/getprop/setprop require AERA's matching system libraries.
 start_init_service aera-agm-service required
 
-echo "AERA audio: Dodge AGM backend is ready"
+echo "AERA audio: Ktm AGM backend is ready"
