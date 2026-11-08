@@ -7,7 +7,7 @@ runtime instead of depending on their device-specific numbering.
 
 ## OEM modem feature map
 
-Checked against OnePlus Ace 6 stock OTA `CPH2653_16.0.2.402(EX01)`:
+Checked against OnePlus 13 stock OTA `CPH2653_16.0.2.402(EX01)`:
 
 - Stock executable: `/odm/bin/hw/mdm_feature`
 - SHA-256: `5d80ade63f3c38c825d8f27968e9edb8e8c60e642f8a6b8208983c09e9eaf0b1`

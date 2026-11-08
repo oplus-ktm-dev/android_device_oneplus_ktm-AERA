@@ -1,7 +1,7 @@
 # Ktm GPU recovery prebuilts
 
 These proprietary ARM64 Adreno userspace libraries, kernel module, and Gen8
-firmware are copied from the owner's extracted OnePlus Ace 6 OTA at
+firmware are copied from the owner's extracted OnePlus 13 OTA at
 `MIO-KITCHEN/OP13`. They stay in the Ktm device tree because they are specific
 to the SM8750/`sun` platform and its Adreno 830.
 
