@@ -33,7 +33,7 @@ $(call inherit-product, device/oneplus/ktm/device.mk)
 PRODUCT_DEVICE := ktm
 PRODUCT_NAME := twrp_ktm
 PRODUCT_BRAND := oneplus
-PRODUCT_MODEL := OnePlus 13
+PRODUCT_MODEL := OnePlus Ace 6
 PRODUCT_MANUFACTURER := oneplus
 
 PRODUCT_GMS_CLIENTID_BASE := android-oplus

@@ -1,12 +1,12 @@
-# AERA Recovery Project device tree for OnePlus 13
+# AERA Recovery Project device tree for OnePlus Ace 6
 
 Device codename: `ktm`
 
 Platform: Qualcomm SM8750
 Recovery partition limit: 100 MiB
 
-This tree keeps the history of the original OnePlus device tree (OnePlus 13 stock)
-while carrying the OnePlus 13 integration for AERA Recovery Project R1.0.
+This tree keeps the history of the original OnePlus device tree (OnePlus Ace 6 stock)
+while carrying the OnePlus Ace 6 integration for AERA Recovery Project R1.0.
 
 ## Hardware support
 
@@ -15,12 +15,12 @@ while carrying the OnePlus 13 integration for AERA Recovery Project R1.0.
 - Wi-Fi
 - Haptics and flashlight
 - Adreno 830 recovery rendering with matching Gen8 firmware
-- Qualcomm AGM/PAL audio using the installed OnePlus 13 stock partitions
+- Qualcomm AGM/PAL audio using the installed OnePlus Ace 6 stock partitions
 - Mobile data (CN NV backing) via `aera-cellular-provider`
 
 The proprietary graphics, audio, and cellular NV files in this repository
 target the SM8750 platform used by `ktm`. They must be validated against
-the matching OnePlus 13 stock firmware before release.
+the matching OnePlus Ace 6 stock firmware before release.
 
 ## Build
 

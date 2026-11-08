@@ -24,7 +24,7 @@ case "$(getprop ro.product.device)" in
     *)
         case "$(getprop ro.product.vendor.device)" in
             ktm|PLQ110|OP6113L1|OP5D55L1|OP5D0DL1|PJZ110|CPH2649|CPH2653|CPH2655) ;;
-            *) fail "this backend is only valid on Ktm/OnePlus 13" ;;
+            *) fail "this backend is only valid on Ktm/OnePlus Ace 6" ;;
         esac
         ;;
 esac
