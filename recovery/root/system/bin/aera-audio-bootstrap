@@ -87,7 +87,7 @@ fi
     fail "could not expose the stock /dsp path"
 
 # Qualcomm's audio processes are built against the framework Binder ABI from
-# the installed OP13 system. Recovery's Binder-NDK library is close enough to
+# the installed Ace 6 system. Recovery's Binder-NDK library is close enough to
 # load but is not compatible with the vendor-side Binder snapshot, causing
 # audioadsprpcd and dspservice to restart before AudioPD comes up. Expose only
 # the two ABI-matched Binder libraries rather than overlaying /system.

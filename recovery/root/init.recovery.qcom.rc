@@ -49,7 +49,7 @@ service post-boot-script /system/bin/sh -c /vendor/bin/init.kernel.post_boot-sun
     oneshot
     seclabel u:r:recovery:s0
 
-# The installed OP13 vendor supplies these ABI-matched Qualcomm daemons.
+# The installed Ace 6 vendor supplies these ABI-matched Qualcomm daemons.
 # Keep them disabled until AERA has mounted vendor and firmware, then start
 # them through init so SELinux performs the stock executable transitions.
 service aera-pd-mapper /vendor/bin/aera-pd-mapper
