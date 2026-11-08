@@ -34,14 +34,16 @@ RMTFS backing partitions remain read-only and writable TFTP/RFS paths are
 RAM-only. Kernel data modules are loaded from the installed ROM, not bundled
 into the recovery ramdisk. Do not stop the helpers before stopping MSS.
 
-## Project-specific static NV
+## Static NV
 
-Project `23821` uses the CN static-NV image bundled at
-`/system/etc/aera/mobile/23821/oplusstanvbk.img`. The provider reads the project
-ID from `/proc/oplusVersion/prjName` and checks the image's exact size and
-SHA-256 before starting MSS. A missing or modified image fails the connection
-instead of silently selecting an incompatible image. All other project IDs
-use their original active-slot `oplusstanvbk_a/b` partition.
+Ace 6 (project `24851`, the only project this tree targets) has no bundled
+static-NV image: the helper opens the device's own active-slot
+`oplusstanvbk_a/b` partition read-only (verified on the rooted PLQ110:
+20 MiB each, `FEMNVBK` header). The project ID is still read from
+`/proc/oplusVersion/prjName` and logged. The legacy OnePlus 13 CN image
+(project 23821) was removed with this commit; its provenance (the
+`fix-signal-oneplus13` v4.1 module, author Fly) remains in the git history
+at the removed `firmware/23821/` path.
 
 The selection is private to RMTFS: no global partition symlinks, loop devices,
 NV writes, root-module scripts, or files under `/data` are needed. The helper
@@ -52,16 +54,10 @@ Ktm also needs its stock-compatible virtual OEM metadata sector at offset
 20 MiB. The helper supplies that sector from a private RAM file rather than
 appending anything to either backing image or physical partition.
 
-The bundled blob is proprietary and was supplied by the user's installed
-`fix-signal-oneplus13` v4.1 module (author Fly). See `firmware/23821/NOTICE`.
-The image remains proprietary; the license of the surrounding provider source
-does not apply to it. Its provenance and original notice are retained separately.
-
 ## Verification
 
 Host tests: `tests/sim_test.cpp`, `tests/modem_features_test.cpp`,
-`tests/oem_miscinfo_test.cpp`, `tests/nv_override_test.cpp`, and
-`tests/readonly_guard_test.c`. The file-open guard covers both normal libc
+`tests/oem_miscinfo_test.cpp`, and `tests/readonly_guard_test.c`. The file-open guard covers both normal libc
 calls and Bionic's fortified `__open_2` / `__openat_2` entry points; the latter
 must not bypass read-only enforcement or the private NV-path selection.
 Live testing of the RAM-only CN overlay restored a valid DMS IMEI, SIM-ready
