@@ -519,8 +519,8 @@ struct Session {
     modem=ModemPath();
     if(Read(modem+"/state")!="offline")throw std::runtime_error("The modem is already running outside AERA mobile data; reboot recovery first");
     Phase("starting","Preparing the modem");
-    project=DodgeHardwareNumber("/proc/oplusVersion/prjName");
-    ValidateDodgeNvOverride(project);
+    project=KtmHardwareNumber("/proc/oplusVersion/prjName");
+    ValidateKtmNvOverride(project);
     fprintf(stderr,"mobile: project %lu static NV source: %s\n",project,
         project==23821?"verified ramdisk CN image":"active-slot partition");
     Module("rmnet_ctl");Module("ipanetm");Module("rmnet_core");
@@ -529,7 +529,7 @@ struct Session {
     struct statfs ram{};
     if(statfs("/tmp",&ram)||(ram.f_type!=0x01021994&&ram.f_type!=0x858458f6))
       throw std::runtime_error("Modem scratch storage is not RAM-backed");
-    const auto metadata=ReadDodgeOemMiscInfo();
+    const auto metadata=ReadKtmOemMiscInfo();
     if(!Write(std::string(kDirectory)+"/oem-miscinfo",
         std::string(metadata.begin(),metadata.end()),O_WRONLY|O_CREAT|O_TRUNC))
       throw std::runtime_error("Cannot prepare OEM modem metadata");

@@ -1,42 +1,34 @@
-# OnePlus 13 dodge Android device tree
+# AERA Recovery Project device tree for OnePlus 13
 
-## Working
+Device codename: `ktm`
 
-- [X] Display
-- [X] Touch (Even in FastbootD)
-- [X] Decryption
-- [X] Flashing
-- [X] Backup & Restore
-- [X] MTP/OTG Storage
-- [X] ADB/FastbootD
-- [X] Factory Reset
-- [X] Vibrator
-- [X] Display & Vibration Settings
+Platform: Qualcomm SM8750
+Recovery partition limit: 100 MiB
 
-## Not working
-- [ ] ????????
+This tree keeps the history of the original OnePlus device tree (OnePlus 13 stock)
+while carrying the OnePlus 13 integration for AERA Recovery Project R1.0.
 
-# How To Build
+## Hardware support
 
-### Clone & Sync Source
-```
-mkdir -p ~/android/OrangeFox_14
-cd ~/android/OrangeFox_14
-git clone https://gitlab.com/OrangeFox/sync.git
-cd sync
-./orangefox_sync.sh --branch 14.1 --path ~/android/fox_14.1
-```
-### Clone Device-tree
-```
-cd ~/android/fox_14.1/device
-mkdir -p oneplus
-cd oneplus
-git clone https://github.com/koaaN/android_device_oneplus_dodge-orangefox.git dodge
-```
-### BUILD!
-```
-cd ~/android/fox_14.1
+- Display and touch (even in fastbootd)
+- Decryption, flashing, backup & restore
+- Wi-Fi
+- Haptics and flashlight
+- Adreno 830 recovery rendering with matching Gen8 firmware
+- Qualcomm AGM/PAL audio using the installed OnePlus 13 stock partitions
+- Mobile data (CN NV backing) via `aera-cellular-provider`
+
+The proprietary graphics, audio, and cellular NV files in this repository
+target the SM8750 platform used by `ktm`. They must be validated against
+the matching OnePlus 13 stock firmware before release.
+
+## Build
+
+```sh
+cd ~/android/AERA_16.0
 source build/envsetup.sh
-lunch twrp_dodge-ap2a-eng
+lunch twrp_ktm-eng
 mka adbd recoveryimage
 ```
+
+The output is written to `out/target/product/ktm/`.
