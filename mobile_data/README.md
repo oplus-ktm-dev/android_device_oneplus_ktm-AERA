@@ -7,10 +7,12 @@ runtime instead of depending on their device-specific numbering.
 
 ## OEM modem feature map
 
-Checked against OnePlus Ace 6 stock OTA `CPH2653_16.0.2.402(EX01)`:
+Offsets were derived from `CPH2653_16.0.2.402(EX01)` stock ODM `mdm_feature`
+(project 23821, OnePlus 13 family). They are **not yet verified on Ace 6**
+(PLQ110, project 24851); re-check them against the Ace 6 stock ODM build:
 
 - Stock executable: `/odm/bin/hw/mdm_feature`
-- SHA-256: `5d80ade63f3c38c825d8f27968e9edb8e8c60e642f8a6b8208983c09e9eaf0b1`
+- SHA-256 of the CPH2653 build: `5d80ade63f3c38c825d8f27968e9edb8e8c60e642f8a6b8208983c09e9eaf0b1`
 - Its `read_reserve1_mdmfeature` routine at `0x4b80` reads `0x3000` bytes
   from `oplusreserve1`, using offset `0x493000` for UFS (`/dev/block/sda`)
   or `0x46a000` otherwise. These match the Infiniti/Lighthouse layout.
