@@ -52,6 +52,14 @@ on boot
     symlink /dev/tcm0 /dev/tcm_hbp0
     chmod 0660 /dev/tcm_hbp0
     start touchDaemon
+    # The HBP HAL is what actually enables HBP-mode touch input on the
+    # Synaptics TCM/S3910 controller: it loads the HBP firmware (via sysfs
+    # fallback) and turns on HBP reporting to the kernel input layer, so the
+    # recovery UI gets touch events on /dev/input/event6. touchDaemon (the TCM
+    # ops/health layer) is NOT required for basic touch - it still aborts in
+    # recovery because /proc/devinfo/tp is absent, which is fine. Start the HAL
+    # at boot so the UI gets touch without waiting for the fingerprint-auth gate.
+    start vendor.touch-aidl-1
 
 on property:vendor.aera.fingerprint.start=1
     setprop vendor.aera.fingerprint.ready 0
