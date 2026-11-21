@@ -4,9 +4,4 @@
         <version>3</version>
         <fqname>IFingerprint/default</fqname>
     </hal>
-    <hal format="aidl">
-        <name>vendor.oplus.hardware.touch</name>
-        <version>2</version>
-        <fqname>IOplusTouch/default</fqname>
-    </hal>
 </manifest>
